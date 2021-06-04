@@ -2,36 +2,48 @@ import React, { Component } from 'react';
 import FastCanvas from './fastCanvas';
 import createDrawConfig from './drawConfig';
 
+
 export default class CanvasDemo extends Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
     this.state = {
-      isLoading: true,
+      percent: 50
     }
 
-    const config = createDrawConfig({
-      percent: 50 / 100
-    })
 
-    this.fastCanvas = new FastCanvas(config);
   }
 
   componentDidMount() {
-    this.init();
+    console.log('update')
+    this.renderCanvas();
   }
 
-  init = async () => {
-    await this.drawPoster();
+  renderCanvas = async () => {
+    const config = createDrawConfig({
+      percent: this.state.percent
+    })
+
+    this.fastCanvas = new FastCanvas(config);
+    await this.fastCanvas.render();
   }
 
-  drawPoster = async () => {
-    const base64Image = await this.fastCanvas.render();
-    return base64Image
+  updatePercent = () => {
+    console.log(this.textInput.current.value)
+    this.setState({
+      percent: this.textInput.current.value / 100
+    },() => {
+      this.renderCanvas();
+    })
   }
 
   render() {
+    const { percent } = this.state;
     return (
       <>
+        <input type="number" step="1" min="0" max="100" ref={this.textInput} defaultValue={percent} />
+        <button onClick={this.updatePercent}>update percent</button>
+        <div>display percent: {percent}%</div>
         <div id='poster' />
       </>
 

@@ -26,9 +26,11 @@ export default class FastCanvas {
       width,
       height,
     } = this.canvasConfig;
-    const c = window.document.createElement('canvas');
-
-    c.id = id;
+    let c = window.document.getElementById(id);
+    if(!c) {
+      c = window.document.createElement('canvas');
+      c.id = id;
+    }
 
     const ctx = c.getContext('2d'); // 创建context对象
     if (!ctx) {
@@ -158,88 +160,10 @@ export default class FastCanvas {
     try {
       await this.startDraw();
       await this.insertRoot();
-      const base64 = await this.toBase64();
-      return base64;
     } catch (err) {
       if (this.canvasConfig.debug) {
         console.log(err)
       }
     }
   }
-
-  toBase64 = (imgPrefix = 'image/png', quality) => {
-    return this.c.toDataURL(imgPrefix, quality);
-  }
 }
-
-
-// 其他 canvas写法 ------------  暂时不需要
-
-
-  // drawClearRect = ({ x, y, width, height }) => {
-  //   const ctx = this.ctx;
-  //   ctx.clearRect(x, y, width, height);
-  // }
-
-  // drawBackgroundColor = ({ color }) => {
-  //   const ctx = this.ctx;
-  //   ctx.fillStyle = color;
-  //   ctx.fillRect(0, 0, this.c.width, this.c.height);
-  // }
-
-  // drawFillRect = ({ x, y, width, height }) => {
-  //   const ctx = this.ctx;
-  //   ctx.fillRect(x, y, width, height);
-  // }
-
-  // drawStrokeRect = ({ x, y, width, height }) => {
-  //   const ctx = this.ctx;
-  //   ctx.strokeRect(x, y, width, height);
-  // }
-
- // drawText = ({ text, x, y, font, textBaseline, direction, textAlign, color, stroke = false, maxWidth }) => {
-  //   const ctx = this.ctx;
-  //   const { text: defaultText } = this.preset;
-
-  //   ctx.font = font || defaultText.font;
-  //   ctx.textBaseline = textBaseline || defaultText.textBaseline;
-  //   ctx.direction = direction || defaultText.direction;
-  //   ctx.textAlign = textAlign || defaultText.textAlign;
-  //   ctx.fillStyle = color || defaultText.color;
-  //   ctx.maxWidth = maxWidth || defaultText.maxWidth;
-
-  //   if (stroke) {
-  //     ctx.strokeText(text, x, y, maxWidth);
-  //   } else {
-  //     ctx.fillText(text, x, y, maxWidth);
-  //   }
-  // }
-
-  // drawCenterText = ({ text, centerX, y, font, textBaseline, direction, color, stroke = false, maxWidth }) => {
-  //   // 居中字体
-  //   // 提供一个居中的容器坐标  centerX 中心不提供，默认为画布中心
-  //   const x = centerX || this.canvasConfig.width / 2;
-
-  //   this.drawText({ text, x, y, font, textBaseline, direction, textAlign: 'center', color, stroke, maxWidth })
-  // }
-
-  // drawCircleImage = async ({ url, x, y, radius, borderColor, borderWidth }) => {
-  //   // 带边框的圆头像
-  //   const ctx = this.ctx;
-  //   ctx.save();
-  //   if (borderWidth) {
-  //     ctx.beginPath();
-  //     if (borderColor) {
-  //       ctx.fillStyle = borderColor
-  //     }
-
-  //     ctx.arc(x + radius, y + radius, radius + borderWidth, 0, 2 * Math.PI, false);
-  //     ctx.fill();
-  //     ctx.restore();
-  //   }
-
-  //   ctx.beginPath();
-  //   ctx.arc(x + radius, y + radius, radius, 0, 2 * Math.PI, false);
-  //   ctx.clip();
-  //   await this.drawImage({ url, x, y, width: radius * 2, height: radius * 2 });
-  // }
