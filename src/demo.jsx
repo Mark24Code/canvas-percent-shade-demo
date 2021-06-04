@@ -21,7 +21,7 @@ export default class CanvasDemo extends Component {
 
   renderCanvas = async () => {
     const config = createDrawConfig({
-      percent: this.state.percent
+      percent: this.state.percent / 100
     })
 
     this.fastCanvas = new FastCanvas(config);
@@ -31,7 +31,7 @@ export default class CanvasDemo extends Component {
   updatePercent = () => {
     console.log(this.textInput.current.value)
     this.setState({
-      percent: this.textInput.current.value / 100
+      percent: this.textInput.current.value
     },() => {
       this.renderCanvas();
     })
